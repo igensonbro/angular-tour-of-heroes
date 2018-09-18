@@ -89,4 +89,19 @@ export class HeroService {
       .pipe(tap (_ => this.log('delete hero id=${id}')),
             catchError(this.handleError<Hero>('deleteHero')));
   }
+
+  /**
+   * Get heroes where whose name contains search term
+   */
+  searchHeroes(term: string) : Observable<Hero[]> {
+    if (!term.trim()) {
+      return of([]);
+    }
+
+    return this.httpClient.get<Hero[]>(`${this.herosUrl}/?name=${term}`)
+      .pipe(tap(_ => this.log(`found heroes matching "${term}"`)),
+        catchError(this.handleError<Hero[]>('searchHeroes',[])));
+  }
+
+  
 }
